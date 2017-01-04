@@ -106,6 +106,8 @@ class Command(BaseCommand):
                     router.allow_migrate(connection.alias, app_label, model_name=model._meta.object_name)
                     for app_label in consistency_check_labels
                     for model in apps.get_app_config(app_label).get_models()
+                    # The database must not be read-only    
+                    and not connections.settings_dict.get('OPTIONS').get('read_only') 
             )):
                 loader.check_consistent_history(connection)
 
